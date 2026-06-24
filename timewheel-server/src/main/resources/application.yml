@@ -1,0 +1,33 @@
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: timewheel-service
+      auto-offset-reset: earliest
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+timewheel:
+  tick-duration: 10s
+  ticks-per-wheel: 100
+  max-cycle: 2
+  node-id:
+  redis:
+    key-prefix: timewheel-service
+  kafka:
+    input-topic: timewheel.delay.input
+    consumer-group: timewheel-service
+    dead-letter-topic: timewheel.delay.dlq
+    publish-max-attempts: 3
+  health:
+    max-tick-idle: 60s
